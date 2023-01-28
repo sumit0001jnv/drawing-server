@@ -227,6 +227,8 @@ const LayerUI = ({
             >
               {!appState.viewModeEnabled &&
                 actionManager.renderAction("loadScene")}
+                {!appState.viewModeEnabled &&
+                actionManager.renderAction("loadPdfScene")}
               {/* // TODO barnabasmolnar/editor-redesign  */}
               {/* is this fine here? */}
               {appState.fileHandle &&

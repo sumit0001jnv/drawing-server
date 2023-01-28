@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { actionLoadScene, actionShortcuts } from "../actions";
+import { actionLoadScene,actionLoadPdfScene, actionShortcuts } from "../actions";
 import { ActionManager } from "../actions/manager";
 import { getShortcutFromShortcutName } from "../actions/shortcuts";
 import { isExcalidrawPlusSignedUser } from "../constants";
@@ -96,6 +96,50 @@ const WelcomeScreen = ({
       </div>
       <div className="virgil WelcomeScreen-decor WelcomeScreen-decor--subheading">
         {subheadingJSX}
+      </div>
+      <div className="WelcomeScreen-items">
+        {!appState.viewModeEnabled && (
+          <WelcomeScreenItem
+            // TODO barnabasmolnar/editor-redesign
+            // do we want the internationalized labels here that are currently
+            // in use elsewhere or new ones?
+            label={t("buttons.load")}
+            onClick={() => actionManager.executeAction(actionLoadScene)}
+            shortcut={getShortcutFromShortcutName("loadScene")}
+            icon={LoadIcon}
+          />
+        )}
+        {!appState.viewModeEnabled && (
+          <WelcomeScreenItem
+            // TODO barnabasmolnar/editor-redesign
+            // do we want the internationalized labels here that are currently
+            // in use elsewhere or new ones?
+            label={'Load Pdf'}
+            onClick={() => actionManager.executeAction(actionLoadPdfScene)}
+            shortcut={getShortcutFromShortcutName("loadPdfScene")}
+            icon={LoadIcon}
+          />
+        )}
+        <WelcomeScreenItem
+          label={t("labels.liveCollaboration")}
+          shortcut={null}
+          onClick={() => setCollabDialogShown(true)}
+          icon={UsersIcon}
+        />
+        <WelcomeScreenItem
+          onClick={() => actionManager.executeAction(actionShortcuts)}
+          label={t("helpDialog.title")}
+          shortcut="?"
+          icon={HelpIcon}
+        />
+        {!isExcalidrawPlusSignedUser && (
+          <WelcomeScreenItem
+            link="https://plus.excalidraw.com/plus?utm_source=excalidraw&utm_medium=app&utm_content=welcomeScreenGuest"
+            label="Try Excalidraw Plus!"
+            shortcut={null}
+            icon={PlusPromoIcon}
+          />
+        )}
       </div>
       <div className="WelcomeScreen-items">
         {!appState.viewModeEnabled && (

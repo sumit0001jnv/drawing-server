@@ -186,6 +186,7 @@ export const MobileMenu = ({
     return (
       <>
         {!appState.viewModeEnabled && actionManager.renderAction("loadScene")}
+        {!appState.viewModeEnabled && actionManager.renderAction("loadPdfScene")}
         {renderJSONExportDialog()}
         {renderImageExportDialog()}
         <MenuItem

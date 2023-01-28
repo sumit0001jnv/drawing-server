@@ -102,6 +102,7 @@ export const MIME_TYPES = {
   webp: "image/webp",
   bmp: "image/bmp",
   ico: "image/x-icon",
+  pdf: "image/x-pdf",
   binary: "application/octet-stream",
 } as const;
 
@@ -146,6 +147,7 @@ export const DEFAULT_UI_OPTIONS: AppProps["UIOptions"] = {
     clearCanvas: true,
     export: { saveFileToDisk: true },
     loadScene: true,
+    loadPdfScene:true,
     saveToActiveFile: true,
     toggleTheme: null,
     saveAsImage: true,
@@ -181,6 +183,7 @@ export const ALLOWED_IMAGE_MIME_TYPES = [
   MIME_TYPES.webp,
   MIME_TYPES.bmp,
   MIME_TYPES.ico,
+  MIME_TYPES.pdf,
 ] as const;
 
 export const MAX_ALLOWED_FILE_BYTES = 2 * 1024 * 1024;

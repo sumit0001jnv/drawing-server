@@ -378,6 +378,7 @@ type CanvasActions = {
   clearCanvas?: boolean;
   export?: false | ExportOpts;
   loadScene?: boolean;
+  loadPdfScene?: boolean;
   saveToActiveFile?: boolean;
   toggleTheme?: boolean | null;
   saveAsImage?: boolean;

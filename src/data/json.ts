@@ -88,6 +88,34 @@ export const saveAsJSON = async (
   return { fileHandle };
 };
 
+
+export const loadPdfFile = async (localAppState: AppState,
+  localElements: readonly ExcalidrawElement[] | null
+  )=>{
+  const file = await fileOpen({
+    description: "Excalidraw files",
+    // ToDo: Be over-permissive until https://bugs.webkit.org/show_bug.cgi?id=34442
+    // gets resolved. Else, iOS users cannot open `.excalidraw` files.
+    // extensions: ["json", "excalidraw", "png", "svg"],
+  });
+
+  return await normalizeFile(file);
+ 
+}
+
+export const loadFromJSONFile = async (
+  localAppState: AppState,
+  localElements: readonly ExcalidrawElement[] | null,
+  file:any
+) => {
+  return loadFromBlob(
+    await normalizeFile(file),
+    localAppState,
+    localElements,
+    file.handle,
+  );
+};
+
 export const loadFromJSON = async (
   localAppState: AppState,
   localElements: readonly ExcalidrawElement[] | null,

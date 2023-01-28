@@ -16,11 +16,12 @@ import { DEFAULT_EXPORT_PADDING, EXPORT_SCALES, THEME } from "../constants";
 import { getSelectedElements, isSomeElementSelected } from "../scene";
 import { getNonDeletedElements } from "../element";
 import { ActiveFile } from "../components/ActiveFile";
-import { isImageFileHandle } from "../data/blob";
+import { isImageFileHandle, loadFromBlob, normalizeFile } from "../data/blob";
 import { nativeFileSystemSupported } from "../data/filesystem";
 import { Theme } from "../element/types";
 import MenuItem from "../components/MenuItem";
 import { getShortcutFromShortcutName } from "./shortcuts";
+import { loadFromJSONFile, loadPdfFile } from "../data/json";
 
 export const actionChangeProjectName = register({
   name: "changeProjectName",
@@ -249,12 +250,12 @@ export const actionLoadScene = register({
   keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.O,
   PanelComponent: ({ updateData }) => (
     <MenuItem
-      label={t("buttons.load")}
-      icon={LoadIcon}
-      onClick={updateData}
-      dataTestId="load-button"
-      shortcut={getShortcutFromShortcutName("loadScene")}
-    />
+    label={t("buttons.load")}
+    icon={LoadIcon}
+    onClick={updateData}
+    dataTestId="load-button"
+    shortcut={getShortcutFromShortcutName("loadScene")}
+  />
   ),
 });
 
@@ -284,5 +285,73 @@ export const actionExportWithDarkMode = register({
         title={t("labels.toggleExportColorScheme")}
       />
     </div>
+  ),
+});
+
+
+export const actionLoadPdfScene = register({
+  name: "loadPdfScene",
+  trackEvent: { category: "export" },
+  perform: async (elements, appState, _, app) => {
+    try {
+      function sleep(ms:number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+     }
+
+     const localFile=await fetch('test.excalidraw');
+     let x=await localFile.text();
+     let  file = new File([x], 'test.excalidraw');
+     const file_2=await loadPdfFile(appState, elements);
+     console.log(file);
+     file= await normalizeFile(file);
+     await sleep(1000);
+    //  const x=  loadFromBlob(
+    //    file,
+    //    appState,
+    //    elements,
+    //    file.handle,
+    //  );
+
+    // console.log(x);
+    console.log(file);
+    const {
+      elements: loadedElements,
+      appState: loadedAppState,
+      files,
+    } =await loadFromJSONFile( appState,elements,file);
+      // const {
+      //   elements: loadedElements,
+      //   appState: loadedAppState,
+      //   files,
+      // } = await loadFromJSON(appState, elements);
+      return {
+        elements: loadedElements,
+        appState: loadedAppState,
+        files,
+        commitToHistory: true,
+      };
+      
+    } catch (error: any) {
+      if (error?.name === "AbortError") {
+        console.warn(error);
+        return false;
+      }
+      return {
+        elements,
+        appState: { ...appState, errorMessage: error.message },
+        files: app.files,
+        commitToHistory: false,
+      };
+    }
+  },
+  keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.P,
+  PanelComponent: ({ updateData }) => (
+    <MenuItem
+    label={'Load PDf'}
+    icon={LoadIcon}
+    onClick={updateData}
+    dataTestId="load-button"
+    shortcut={getShortcutFromShortcutName("loadPdfScene")}
+  />
   ),
 });
