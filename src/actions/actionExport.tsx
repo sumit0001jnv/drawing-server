@@ -23,6 +23,8 @@ import MenuItem from "../components/MenuItem";
 import { getShortcutFromShortcutName } from "./shortcuts";
 import { loadFromJSONFile, loadPdfFile } from "../data/json";
 
+// import axios from 'axios';
+
 export const actionChangeProjectName = register({
   name: "changeProjectName",
   trackEvent: false,
@@ -294,17 +296,64 @@ export const actionLoadPdfScene = register({
   trackEvent: { category: "export" },
   perform: async (elements, appState, _, app) => {
     try {
-      function sleep(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-     }
+     
+     const token=localStorage.getItem('parent-token');
+     console.log('token',token);
+    
 
-     const localFile=await fetch('test.excalidraw');
-     let x=await localFile.text();
-     let  file = new File([x], 'test.excalidraw');
      const file_2=await loadPdfFile(appState, elements);
-     console.log(file);
+     const url='https://draw.sieloapp.com/api/collab-adapter';
+     let file:any;
+     const data = new FormData()
+     data.append('file', file_2)
+     try{
+      // fetch(url, { method: 'post',
+      // body: data,
+      //  headers: {
+      //   'Content-Type': 'multipart/form-data',
+      //   Authorization:`Bearer ${token}`
+      //   // 'Content-Type': 'application/x-www-form-urlencoded',
+      // },
+      // }).then((response) => {
+      //   return console.log(response);
+      //  });
+
+       const form = new FormData();
+       form.append('file', file_2);
+       
+      const response:any=await fetch('https://draw.sieloapp.com/api/collab-adapter', {
+           method: 'POST',
+           headers: {
+               'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOGJlMmZlY2QtYjk5YS00NzYzLWFjYTAtMDFjYjM2MjVlYzNlIn0.Jfqau6P_I9D6LYFg3OPWOceHoMA3QUha9sVNbrtlMf4',
+           },
+           body: form
+       }).then((response) => {
+        return response.json();
+       })
+
+      // const response:any=await axios({
+      //   method: "post",
+      //   url: url,
+      //   data: data,
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // })
+
+      if(response.status){
+        const localFile=await fetch(response.file_url);
+        let x=await localFile.text();
+        file = new File([x], 'test.excalidraw');
+      }else{
+        console.log('Error occured at adapter end')
+      }
+      debugger;
+     }catch(err){
+      debugger;
+      console.log(err);
+     }
+     
      file= await normalizeFile(file);
-     await sleep(1000);
     //  const x=  loadFromBlob(
     //    file,
     //    appState,

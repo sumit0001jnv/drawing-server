@@ -77,8 +77,6 @@ export const getCollabServer = async (): Promise<{
     const resp = await fetch(
       `${process.env.REACT_APP_PORTAL_URL}/collab-server`,{mode: "no-cors"}
     );
-    debugger;
-    console.log(resp);
     return await resp.json();
   } catch (error) {
     console.error(error);

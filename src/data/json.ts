@@ -99,7 +99,8 @@ export const loadPdfFile = async (localAppState: AppState,
     // extensions: ["json", "excalidraw", "png", "svg"],
   });
 
-  return await normalizeFile(file);
+  return file;
+  // return await normalizeFile(file);
  
 }
 

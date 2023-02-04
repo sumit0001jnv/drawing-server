@@ -981,6 +981,13 @@ class App extends React.Component<AppProps, AppState> {
     } else {
       this.updateDOMRect(this.initializeScene);
     }
+
+    window.addEventListener('message', function(event:any) {
+      // localStorage.setItem('parent-data',event);
+      if(event?.data?.type==='token'){
+        localStorage.setItem('parent-token',event.data.token);
+      }
+    }, false);
   }
 
   public componentWillUnmount() {
@@ -5619,7 +5626,6 @@ class App extends React.Component<AppProps, AppState> {
       );
     }
   };
-
   private initializeImageDimensions = (
     imageElement: ExcalidrawImageElement,
     forceNaturalSize = false,
