@@ -349,8 +349,11 @@ export const actionLoadPdfScene = register({
       }
       debugger;
      }catch(err){
-      debugger;
       console.log(err);
+     }
+
+     if(!file){
+      alert('Invalid file format');
      }
      
      file= await normalizeFile(file);
@@ -362,7 +365,6 @@ export const actionLoadPdfScene = register({
     //  );
 
     // console.log(x);
-    console.log(file);
     const {
       elements: loadedElements,
       appState: loadedAppState,
@@ -396,7 +398,7 @@ export const actionLoadPdfScene = register({
   keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.P,
   PanelComponent: ({ updateData }) => (
     <MenuItem
-    label={'Load PDf'}
+    label={'Load File'}
     icon={LoadIcon}
     onClick={updateData}
     dataTestId="load-button"

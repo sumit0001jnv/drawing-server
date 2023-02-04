@@ -114,7 +114,7 @@ const WelcomeScreen = ({
             // TODO barnabasmolnar/editor-redesign
             // do we want the internationalized labels here that are currently
             // in use elsewhere or new ones?
-            label={'Load Pdf'}
+            label={'Load File'}
             onClick={() => actionManager.executeAction(actionLoadPdfScene)}
             shortcut={getShortcutFromShortcutName("loadPdfScene")}
             icon={LoadIcon}
